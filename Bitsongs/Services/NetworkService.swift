@@ -44,9 +44,22 @@ class NetworkService: ObservableObject {
     }
     
     // MARK: - Recommendations
-    func getRecommendations(artistId: Int) async throws -> [Song] {
-        guard artistId > 0 else { return [] }
-        guard let url = URL(string: "\(baseURL)/api/mobile/recommend?artist_id=\(artistId)") else {
+    func getRecommendations(songId: String) async throws -> RecommendationResponse {
+        guard !songId.isEmpty else { return RecommendationResponse(behaviorBased: [], contentBased: []) }
+        guard let encodedSongId = songId.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "\(baseURL)/api/mobile/recommend?song_id=\(encodedSongId)") else {
+            throw NetworkError.invalidURL
+        }
+        let (data, response) = try await session.data(from: url)
+        try validateResponse(response)
+        return try decoder.decode(RecommendationResponse.self, from: data)
+    }
+    
+    // MARK: - Up Next
+    func getUpNext(songId: String, limit: Int = 10) async throws -> [Song] {
+        guard !songId.isEmpty else { return [] }
+        guard let encodedSongId = songId.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "\(baseURL)/api/mobile/up_next?song_id=\(encodedSongId)&limit=\(limit)") else {
             throw NetworkError.invalidURL
         }
         let (data, response) = try await session.data(from: url)
@@ -55,10 +68,20 @@ class NetworkService: ObservableObject {
     }
     
     // MARK: - Get Stream URL
-    func getStreamURL(song: Song) async throws -> StreamInfo {
+    func getStreamURL(song: Song, previousSongID: String? = nil) async throws -> StreamInfo {
         guard let artist = song.artist.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
               let title = song.title.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-              let url = URL(string: "\(baseURL)/api/mobile/play?id=\(song.id)&artist=\(artist)&title=\(title)") else {
+              let songId = song.id.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            throw NetworkError.invalidURL
+        }
+        
+        var urlString = "\(baseURL)/api/mobile/play?id=\(songId)&artist=\(artist)&title=\(title)"
+        if let previousSongID, !previousSongID.isEmpty,
+           let encodedPreviousSongID = previousSongID.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            urlString += "&previous_song_id=\(encodedPreviousSongID)"
+        }
+        
+        guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL
         }
         let (data, response) = try await session.data(from: url)
@@ -86,6 +109,22 @@ class NetworkService: ObservableObject {
             return (response as? HTTPURLResponse)?.statusCode == 200
         } catch {
             return false
+        }
+    }
+    
+    // MARK: - Server Cache
+    func cacheSong(_ song: Song) async {
+        guard let url = URL(string: "\(baseURL)/api/mobile/cache_song") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            request.httpBody = try JSONEncoder().encode(song)
+            let (_, response) = try await session.data(for: request)
+            try validateResponse(response)
+        } catch {
+            // Caching is best-effort and should never block playback.
         }
     }
     
@@ -118,6 +157,16 @@ struct StreamInfo: Codable {
 struct LyricsResponse: Codable {
     let type: String
     let text: String
+}
+
+struct RecommendationResponse: Decodable {
+    let behaviorBased: [Song]
+    let contentBased: [Song]
+    
+    enum CodingKeys: String, CodingKey {
+        case behaviorBased = "behavior_based"
+        case contentBased = "content_based"
+    }
 }
 
 // MARK: - Errors

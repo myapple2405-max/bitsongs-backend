@@ -317,14 +317,15 @@ async function loadRecommendations() {
     const list = document.getElementById('recommendationsList');
     if (!container || !list) return;
 
-    if (recents.length === 0 || !recents.find(s => s.artist_id)) { container.style.display = 'none'; return; }
+    if (recents.length === 0 || !recents[0].id) { container.style.display = 'none'; return; }
     try {
-        const res = await fetch(`/recommend?artist_id=${recents.find(s => s.artist_id).artist_id}`);
+        const res = await fetch(`/recommend?song_id=${encodeURIComponent(recents[0].id)}`);
         const data = await res.json();
-        if (data.length === 0) { container.style.display = 'none'; return; }
+        const songs = flattenRecommendationGroups(data);
+        if (songs.length === 0) { container.style.display = 'none'; return; }
         container.style.display = 'block';
         list.innerHTML = '';
-        data.forEach(song => {
+        songs.forEach(song => {
             const div = document.createElement('div');
             div.className = 'recent-card';
             div.innerHTML = `<img src="${song.cover}"><div class="recent-title">${song.title}</div>`;
@@ -335,17 +336,38 @@ async function loadRecommendations() {
     } catch (e) { container.style.display = 'none'; }
 }
 async function playAutoRecommendation() {
-    if (!currentSong || !currentSong.artist_id) return;
+    if (!currentSong || !currentSong.id) return;
     try {
-        const res = await fetch(`/recommend?artist_id=${currentSong.artist_id}`);
+        const res = await fetch(`/up_next?song_id=${encodeURIComponent(currentSong.id)}&limit=1`);
         const data = await res.json();
-        if (data && data.length > 0) loadSong(data[Math.floor(Math.random() * data.length)]);
+        if (data && data.length > 0) loadSong(data[0]);
     } catch (e) { }
+}
+
+function flattenRecommendationGroups(data) {
+    const behavior = Array.isArray(data?.behavior_based) ? data.behavior_based : [];
+    const content = Array.isArray(data?.content_based) ? data.content_based : [];
+    const combined = [];
+    const seen = new Set();
+
+    [...behavior, ...content].forEach(song => {
+        if (!song || !song.id || seen.has(song.id)) return;
+        seen.add(song.id);
+        combined.push(song);
+    });
+
+    return combined;
+}
+
+function shouldTrackCurrentSongForRecommendations() {
+    if (!currentSong || !audioPlayer.duration || !Number.isFinite(audioPlayer.duration)) return false;
+    return audioPlayer.currentTime >= (audioPlayer.duration / 2);
 }
 
 // --- PLAYER & LYRICS ---
 audioPlayer.onended = () => playNextInQueue();
 async function loadSong(song) {
+    const previousSongId = shouldTrackCurrentSongForRecommendations() ? currentSong?.id : null;
     currentSong = song;
     addToRecents(song);
 
@@ -382,7 +404,8 @@ async function loadSong(song) {
     }
 
     try {
-        const audioRes = await fetch(`/play?artist=${encodeURIComponent(song.artist)}&title=${encodeURIComponent(song.title)}&id=${song.id}`);
+        const previousSongParam = previousSongId ? `&previous_song_id=${encodeURIComponent(previousSongId)}` : '';
+        const audioRes = await fetch(`/play?artist=${encodeURIComponent(song.artist)}&title=${encodeURIComponent(song.title)}&id=${song.id}${previousSongParam}`);
         const audioData = await audioRes.json();
 
         if (audioData.error) throw new Error("Song not found");

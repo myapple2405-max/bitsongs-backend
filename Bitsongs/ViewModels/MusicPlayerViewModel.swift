@@ -5,6 +5,10 @@ import SwiftUI
 
 /// Main ViewModel managing the music player state, audio streaming, and theming
 class MusicPlayerViewModel: ObservableObject {
+    private enum StorageKeys {
+        static let lastPlayedSong = "bitsongs.lastPlayedSong"
+        static let recentSongs = "bitsongs.recentSongs"
+    }
     
     // MARK: - Published Properties
     @Published var songs: [Song] = []
@@ -24,6 +28,8 @@ class MusicPlayerViewModel: ObservableObject {
     @Published var isLyricsLoading: Bool = false
     @Published var serverConnected: Bool = false
     @Published var recommendations: [Song] = []
+    @Published var upNextRecommendations: [Song] = []
+    @Published var recentSongs: [Song] = []
     @Published var showUpNext: Bool = false
     @Published var fontsLoaded: Bool = false
     
@@ -33,12 +39,16 @@ class MusicPlayerViewModel: ObservableObject {
     private var timeObserver: Any?
     private var statusObserver: NSKeyValueObservation?
     private var itemEndObserver: Any?
+    private var colorExtractionTask: Task<Void, Never>?
+    private var expectedSongDuration: TimeInterval = 0
+    private var didTriggerAutoAdvanceForCurrentSong = false
     
     // MARK: - Network
     private let networkService = NetworkService.shared
     
     // MARK: - Search debounce
     private var searchTask: Task<Void, Never>?
+    private let defaults = UserDefaults.standard
     
     // MARK: - Computed Properties
     var currentSong: Song? {
@@ -48,6 +58,9 @@ class MusicPlayerViewModel: ObservableObject {
     
     /// All songs after the current one (for Up Next queue)
     var upNextSongs: [Song] {
+        if !upNextRecommendations.isEmpty {
+            return upNextRecommendations
+        }
         guard !songs.isEmpty else { return [] }
         let nextIndex = currentSongIndex + 1
         if nextIndex < songs.count {
@@ -77,6 +90,7 @@ class MusicPlayerViewModel: ObservableObject {
     init() {
         setupAudioSession()
         setupRemoteCommands()
+        loadRecentSongs()
         loadCustomFonts()
         loadChartSongs()
     }
@@ -112,21 +126,18 @@ class MusicPlayerViewModel: ObservableObject {
             self.serverConnected = connected
             
             if !connected {
-                self.errorMessage = "Cannot connect to server.\nMake sure PyMusic is running."
+                self.errorMessage = "Your music source is offline.\nBring your server back and try again."
                 self.isLoading = false
                 return
             }
             
             do {
                 let chartSongs = try await networkService.getChart()
-                self.songs = chartSongs
+                self.recommendations = []
+                self.upNextRecommendations = []
                 self.isLoading = false
                 
-                if !chartSongs.isEmpty {
-                    self.currentSongIndex = 0
-                    self.duration = TimeInterval(chartSongs[0].duration)
-                    self.extractColorsFromURL(chartSongs[0].coverXL.isEmpty ? chartSongs[0].cover : chartSongs[0].coverXL)
-                }
+                self.restoreStartupSong(from: chartSongs)
             } catch {
                 self.errorMessage = "Failed to load songs: \(error.localizedDescription)"
                 self.isLoading = false
@@ -177,6 +188,7 @@ class MusicPlayerViewModel: ObservableObject {
     
     // MARK: - Load & Play Song
     func loadAndPlaySong(at index: Int, from songList: [Song]? = nil) {
+        let previousSongID = shouldTrackCurrentSongForRecommendations ? currentSong?.id : nil
         let list = songList ?? songs
         guard index >= 0, index < list.count else { return }
         
@@ -199,11 +211,14 @@ class MusicPlayerViewModel: ObservableObject {
         }
         
         guard let song = currentSong else { return }
+        persistLastPlayedSong(song)
         
         // Reset state
         stopPlayback()
         currentTime = 0
         duration = TimeInterval(song.duration)
+        expectedSongDuration = TimeInterval(song.duration)
+        didTriggerAutoAdvanceForCurrentSong = false
         isBuffering = true
         errorMessage = nil
         
@@ -217,7 +232,7 @@ class MusicPlayerViewModel: ObservableObject {
         // Fetch stream URL and play
         Task { @MainActor in
             do {
-                let streamInfo = try await networkService.getStreamURL(song: song)
+                let streamInfo = try await networkService.getStreamURL(song: song, previousSongID: previousSongID)
                 guard let streamURL = URL(string: streamInfo.url) else {
                     throw NetworkError.noStreamURL
                 }
@@ -227,9 +242,13 @@ class MusicPlayerViewModel: ObservableObject {
                 
                 self.setupAVPlayer(with: streamURL)
                 self.play()
+                Task {
+                    await self.networkService.cacheSong(song)
+                }
                 
                 // Load recommendations in background
-                self.loadRecommendations(artistId: song.artistId)
+                self.loadRecommendations(songId: song.id)
+                self.loadUpNext(songId: song.id)
                 
                 // Load lyrics in background
                 self.loadLyrics(artist: song.artist, title: song.title)
@@ -280,7 +299,11 @@ class MusicPlayerViewModel: ObservableObject {
                     // Update duration from actual stream if available
                     let streamDuration = item.duration.seconds
                     if streamDuration.isFinite && streamDuration > 0 {
-                        self?.duration = streamDuration
+                        if let expectedSongDuration = self?.expectedSongDuration, expectedSongDuration > 0 {
+                            self?.duration = min(expectedSongDuration, streamDuration)
+                        } else {
+                            self?.duration = streamDuration
+                        }
                     }
                     self?.updateNowPlayingInfo()
                 case .failed:
@@ -305,6 +328,12 @@ class MusicPlayerViewModel: ObservableObject {
                 // Check if buffering
                 if let item = self.playerItem {
                     self.isBuffering = !item.isPlaybackLikelyToKeepUp && self.isPlaying
+                }
+                
+                if self.shouldAutoAdvanceAtExpectedEnd {
+                    self.didTriggerAutoAdvanceForCurrentSong = true
+                    self.pause()
+                    self.playNext()
                 }
             }
         }
@@ -353,6 +382,10 @@ class MusicPlayerViewModel: ObservableObject {
     
     func playNext() {
         HapticManager.playSelection()
+        if let recommendedSong = upNextRecommendations.first {
+            selectUpNextSong(recommendedSong)
+            return
+        }
         guard !songs.isEmpty else { return }
         let nextIndex = (currentSongIndex + 1) % songs.count
         let wasPlaying = isPlaying
@@ -405,8 +438,11 @@ class MusicPlayerViewModel: ObservableObject {
     
     func selectUpNextSong(_ song: Song) {
         HapticManager.playLightTap()
-        guard let index = songs.firstIndex(where: { $0.id == song.id }) else { return }
-        loadAndPlaySong(at: index)
+        if let index = songs.firstIndex(where: { $0.id == song.id }) {
+            loadAndPlaySong(at: index)
+        } else {
+            loadAndPlaySong(at: 0, from: [song])
+        }
     }
     
     // MARK: - Search
@@ -436,13 +472,75 @@ class MusicPlayerViewModel: ObservableObject {
     }
     
     // MARK: - Recommendations
-    private func loadRecommendations(artistId: Int) {
+    private func loadRecommendations(songId: String) {
         Task { @MainActor in
             do {
-                let recs = try await networkService.getRecommendations(artistId: artistId)
-                self.recommendations = recs
+                let recs = try await networkService.getRecommendations(songId: songId)
+                self.recommendations = recs.behaviorBased + recs.contentBased
             } catch {
                 self.recommendations = []
+            }
+        }
+    }
+    
+    private func restoreStartupSong(from chartSongs: [Song]) {
+        let lastPlayedSong = loadLastPlayedSong()
+        
+        if let lastPlayedSong {
+            let mergedSongs = [lastPlayedSong] + chartSongs.filter { $0.id != lastPlayedSong.id }
+            songs = mergedSongs
+            currentSongIndex = 0
+            duration = TimeInterval(lastPlayedSong.duration)
+            extractColorsFromURL(lastPlayedSong.coverXL.isEmpty ? lastPlayedSong.cover : lastPlayedSong.coverXL)
+            loadRecommendations(songId: lastPlayedSong.id)
+            loadUpNext(songId: lastPlayedSong.id)
+            loadLyrics(artist: lastPlayedSong.artist, title: lastPlayedSong.title)
+            return
+        }
+        
+        songs = chartSongs
+        guard let firstSong = chartSongs.first else { return }
+        currentSongIndex = 0
+        duration = TimeInterval(firstSong.duration)
+        extractColorsFromURL(firstSong.coverXL.isEmpty ? firstSong.cover : firstSong.coverXL)
+    }
+    
+    private func persistLastPlayedSong(_ song: Song) {
+        guard let data = try? JSONEncoder().encode(song) else { return }
+        defaults.set(data, forKey: StorageKeys.lastPlayedSong)
+        updateRecentSongs(with: song)
+    }
+    
+    private func loadLastPlayedSong() -> Song? {
+        guard let data = defaults.data(forKey: StorageKeys.lastPlayedSong) else { return nil }
+        return try? JSONDecoder().decode(Song.self, from: data)
+    }
+    
+    private func loadRecentSongs() {
+        guard let data = defaults.data(forKey: StorageKeys.recentSongs),
+              let songs = try? JSONDecoder().decode([Song].self, from: data) else {
+            recentSongs = []
+            return
+        }
+        recentSongs = songs
+    }
+    
+    private func updateRecentSongs(with song: Song) {
+        let updatedSongs = [song] + recentSongs.filter { $0.id != song.id }
+        let trimmedSongs = Array(updatedSongs.prefix(20))
+        recentSongs = trimmedSongs
+        
+        guard let data = try? JSONEncoder().encode(trimmedSongs) else { return }
+        defaults.set(data, forKey: StorageKeys.recentSongs)
+    }
+    
+    private func loadUpNext(songId: String) {
+        Task { @MainActor in
+            do {
+                let upNext = try await networkService.getUpNext(songId: songId, limit: 10)
+                self.upNextRecommendations = upNext
+            } catch {
+                self.upNextRecommendations = []
             }
         }
     }
@@ -464,14 +562,16 @@ class MusicPlayerViewModel: ObservableObject {
     
     // MARK: - Color Extraction from URL
     private func extractColorsFromURL(_ urlString: String) {
+        colorExtractionTask?.cancel()
         guard let url = URL(string: urlString) else {
             dominantColors = .default
             return
         }
         
-        Task {
+        colorExtractionTask = Task {
             do {
                 let (data, _) = try await URLSession.shared.data(from: url)
+                guard !Task.isCancelled else { return }
                 if let image = UIImage(data: data) {
                     let colors = ColorExtractor.extractColors(from: image)
                     await MainActor.run {
@@ -559,17 +659,26 @@ class MusicPlayerViewModel: ObservableObject {
         return String(format: "%d:%02d", minutes, seconds)
     }
     
+    private var shouldTrackCurrentSongForRecommendations: Bool {
+        guard duration > 0 else { return false }
+        return currentTime >= (duration / 2)
+    }
+    
+    private var shouldAutoAdvanceAtExpectedEnd: Bool {
+        guard !didTriggerAutoAdvanceForCurrentSong else { return false }
+        guard isPlaying else { return false }
+        guard expectedSongDuration > 0 else { return false }
+        return currentTime >= max(expectedSongDuration - 0.35, 0)
+    }
+    
     // MARK: - Custom Font Loading
     private func loadCustomFonts() {
-        let fonts = [
-            ("Jersey10-Regular", "https://github.com/google/fonts/raw/main/ofl/jersey10/Jersey10-Regular.ttf"),
-            ("Almendra-Regular", "https://github.com/google/fonts/raw/main/ofl/almendra/Almendra-Regular.ttf")
-        ]
+        let fonts = ["Jersey10-Regular", "Almendra-Regular"]
         
         Task {
             var loadedCount = 0
             for font in fonts {
-                if self.registerFont(name: font.0, urlString: font.1) {
+                if self.registerFont(name: font) {
                     loadedCount += 1
                 }
             }
@@ -581,7 +690,17 @@ class MusicPlayerViewModel: ObservableObject {
         }
     }
     
-    private func registerFont(name: String, urlString: String) -> Bool {
+    private func registerFont(name: String) -> Bool {
+        if UIFont(name: name, size: 14) != nil {
+            return true
+        }
+        
+        if let bundleFontURL = Bundle.main.url(forResource: name, withExtension: "ttf") {
+            var error: Unmanaged<CFError>?
+            let registered = CTFontManagerRegisterFontsForURL(bundleFontURL as CFURL, .process, &error)
+            return registered || UIFont(name: name, size: 14) != nil
+        }
+        
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return false }
         let fontUrl = documentsPath.appendingPathComponent("\(name).ttf")
         
@@ -591,21 +710,6 @@ class MusicPlayerViewModel: ObservableObject {
                 return true
             }
             return true // Might be already registered
-        }
-        
-        guard let url = URL(string: urlString),
-              let data = try? Data(contentsOf: url) else {
-            return false
-        }
-        
-        do {
-            try data.write(to: fontUrl)
-            var error: Unmanaged<CFError>?
-            if CTFontManagerRegisterFontsForURL(fontUrl as CFURL, .process, &error) {
-                return true
-            }
-        } catch {
-            print("Failed to save or register font \(name): \(error)")
         }
         return false
     }

@@ -1,6 +1,6 @@
 import Foundation
 
-struct Song: Identifiable, Equatable, Decodable {
+struct Song: Identifiable, Equatable, Codable {
     let id: String
     let title: String
     let artist: String
@@ -11,9 +11,10 @@ struct Song: Identifiable, Equatable, Decodable {
     let duration: Int       // seconds
     let genre: String
     let cached: Bool
+    let reason: String?
     
     enum CodingKeys: String, CodingKey {
-        case id, title, artist, album, cover, duration, genre, cached
+        case id, title, artist, album, cover, duration, genre, cached, reason
         case artistId = "artist_id"
         case coverXL = "cover_xl"
     }
@@ -22,7 +23,7 @@ struct Song: Identifiable, Equatable, Decodable {
         lhs.id == rhs.id
     }
     
-    init(id: String, title: String, artist: String, artistId: Int, album: String, cover: String, coverXL: String, duration: Int, genre: String, cached: Bool = false) {
+    init(id: String, title: String, artist: String, artistId: Int, album: String, cover: String, coverXL: String, duration: Int, genre: String, cached: Bool = false, reason: String? = nil) {
         self.id = id
         self.title = title
         self.artist = artist
@@ -33,6 +34,7 @@ struct Song: Identifiable, Equatable, Decodable {
         self.duration = duration
         self.genre = genre
         self.cached = cached
+        self.reason = reason
     }
     
     init(from decoder: Decoder) throws {
@@ -54,5 +56,21 @@ struct Song: Identifiable, Equatable, Decodable {
         duration = try container.decodeIfPresent(Int.self, forKey: .duration) ?? 0
         genre = try container.decodeIfPresent(String.self, forKey: .genre) ?? "Music"
         cached = try container.decodeIfPresent(Bool.self, forKey: .cached) ?? false
+        reason = try container.decodeIfPresent(String.self, forKey: .reason)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(title, forKey: .title)
+        try container.encode(artist, forKey: .artist)
+        try container.encode(artistId, forKey: .artistId)
+        try container.encode(album, forKey: .album)
+        try container.encode(cover, forKey: .cover)
+        try container.encode(coverXL, forKey: .coverXL)
+        try container.encode(duration, forKey: .duration)
+        try container.encode(genre, forKey: .genre)
+        try container.encode(cached, forKey: .cached)
+        try container.encodeIfPresent(reason, forKey: .reason)
     }
 }

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PlaybackControlsView: View {
     @ObservedObject var viewModel: MusicPlayerViewModel
+    @State private var dragProgress: Double?
     
     var body: some View {
         VStack(spacing: 24) {
@@ -27,16 +28,20 @@ struct PlaybackControlsView: View {
                     // Progress fill
                     Rectangle()
                         .fill(.white)
-                        .frame(width: max(0, geo.size.width * viewModel.progress), height: 2)
+                        .frame(width: max(0, geo.size.width * (dragProgress ?? viewModel.progress)), height: 2)
                 }
                 .contentShape(Rectangle()) // Make touchable
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
                             let progress = max(0, min(value.location.x / geo.size.width, 1.0))
-                            viewModel.seekToProgress(progress)
+                            dragProgress = progress
                         }
                         .onEnded { _ in
+                            if let dragProgress {
+                                viewModel.seekToProgress(dragProgress)
+                            }
+                            dragProgress = nil
                             HapticManager.playLightTap()
                         }
                 )

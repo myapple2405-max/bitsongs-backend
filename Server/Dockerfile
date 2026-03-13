@@ -19,4 +19,4 @@ RUN mkdir -p data song_cache
 EXPOSE 499
 
 # Run the application
-CMD ["python", "app.py"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "499"]

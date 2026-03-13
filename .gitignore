@@ -17,10 +17,14 @@ DerivedData/
 Server/venv/
 Server/__pycache__/
 Server/*.pyc
-Server/data/
+Server/data/*
+!Server/data/songs.json
+!Server/data/tally_counter.json
+Server/data/pymusic.db
 Server/song_cache/
 Server/.env
 
 # === General ===
 *.log
 .env
+learn.md

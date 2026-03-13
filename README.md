@@ -38,7 +38,9 @@ Bitsongs/
 │   ├── app.py                   # Main server (API + streaming)
 │   ├── requirements.txt         # Python dependencies
 │   ├── Dockerfile               # Docker support
-│   └── docker-compose.yml       # Docker Compose config
+│   ├── docker-compose.yml       # Docker Compose config
+│   ├── recommendation/          # Lightweight recommendation engine
+│   └── data/                    # Song catalog + transition tally storage
 │
 ├── .gitignore
 └── README.md
@@ -123,7 +125,8 @@ iPhone App ──HTTP──▶ Flask Server ──▶ iTunes API (search/metadat
 | `/api/mobile/play?id=&artist=&title=` | GET | Get stream URL |
 | `/api/mobile/stream_proxy?url=` | GET | Proxy audio stream |
 | `/api/mobile/lyrics?artist=&title=` | GET | Get lyrics |
-| `/api/mobile/recommend?artist_id=` | GET | Recommendations |
+| `/api/mobile/recommend?song_id=` | GET | Grouped recommendations |
+| `/api/mobile/up_next?song_id=&limit=` | GET | Up Next queue suggestions |
 
 ## 📝 License
 

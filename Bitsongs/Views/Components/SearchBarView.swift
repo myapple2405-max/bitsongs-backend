@@ -4,12 +4,34 @@ struct SearchBarView: View {
     @Binding var text: String
     @Binding var isSearching: Bool
     let onCancel: () -> Void
+    let onSidebarToggle: () -> Void
     let accentColor: Color
     
     @FocusState private var isFocused: Bool
     
     var body: some View {
         HStack(spacing: 12) {
+            Button(action: onSidebarToggle) {
+                Image(systemName: "sidebar.leading")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.82))
+                    .frame(width: 44, height: 44)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(.white.opacity(0.12))
+                    )
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(.ultraThinMaterial)
+                            .environment(\.colorScheme, .dark)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(.white.opacity(0.12), lineWidth: 0.5)
+                    )
+            }
+            .buttonStyle(ScaleButtonStyle())
+            
             // Search field
             HStack(spacing: 10) {
                 Image(systemName: "magnifyingglass")
@@ -23,6 +45,10 @@ struct SearchBarView: View {
                     .focused($isFocused)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
+                    .submitLabel(.search)
+                    .onSubmit {
+                        isFocused = false
+                    }
                     .onChange(of: isFocused) { _, focused in
                         if focused {
                             withAnimation(.easeInOut(duration: 0.3)) {
@@ -201,6 +227,7 @@ struct SearchResultRow: View {
                 text: .constant(""),
                 isSearching: .constant(false),
                 onCancel: {},
+                onSidebarToggle: {},
                 accentColor: .purple
             )
             .padding()
