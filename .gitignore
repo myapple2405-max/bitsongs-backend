@@ -1,0 +1,26 @@
+# === macOS ===
+.DS_Store
+*.swp
+*~
+
+# === Xcode ===
+build/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# === Python Server ===
+Server/venv/
+Server/__pycache__/
+Server/*.pyc
+Server/data/
+Server/song_cache/
+Server/.env
+
+# === General ===
+*.log
+.env
