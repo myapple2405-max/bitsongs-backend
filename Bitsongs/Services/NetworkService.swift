@@ -103,13 +103,21 @@ class NetworkService: ObservableObject {
     
     // MARK: - Health Check
     func healthCheck() async -> Bool {
-        guard let url = URL(string: "\(baseURL)/api/mobile/health") else { return false }
-        do {
-            let (_, response) = try await session.data(from: url)
-            return (response as? HTTPURLResponse)?.statusCode == 200
-        } catch {
-            return false
+        for candidate in candidateBaseURLs() {
+            guard let url = URL(string: "\(candidate)/api/mobile/health") else { continue }
+            do {
+                let (_, response) = try await session.data(from: url)
+                if (response as? HTTPURLResponse)?.statusCode == 200 {
+                    await MainActor.run {
+                        self.baseURL = candidate
+                    }
+                    return true
+                }
+            } catch {
+                continue
+            }
         }
+        return false
     }
     
     // MARK: - Server Cache
@@ -136,6 +144,18 @@ class NetworkService: ObservableObject {
         guard (200...299).contains(httpResponse.statusCode) else {
             throw NetworkError.serverError(httpResponse.statusCode)
         }
+    }
+
+    private func candidateBaseURLs() -> [String] {
+        var candidates = [baseURL]
+        for fallback in [
+            "http://Jay.local:499",
+            "http://127.0.0.1:499",
+            "http://localhost:499"
+        ] where !candidates.contains(fallback) {
+            candidates.append(fallback)
+        }
+        return candidates
     }
 }
 

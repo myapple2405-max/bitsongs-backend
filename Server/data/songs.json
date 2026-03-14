@@ -1118,6 +1118,19 @@
     "energy": null
   },
   {
+    "id": "1453147008",
+    "title": "Nikki's Sparkle",
+    "artist": "Thaman S.",
+    "artist_id": 0,
+    "album": "Mr. Majnu (Original Background Score)",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/99/da/c5/99dac5e5-e882-a337-6110-dd9ad0ba37b1/886447571156.jpg/200x200bb.png",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/99/da/c5/99dac5e5-e882-a337-6110-dd9ad0ba37b1/886447571156.jpg/600x600bb.png",
+    "duration": 0,
+    "genre": "Telugu",
+    "tempo": null,
+    "energy": null
+  },
+  {
     "id": "1458638381",
     "title": "Old Town Road (feat. Billy Ray Cyrus) [Remix]",
     "artist": "Lil Nas X",
@@ -2340,6 +2353,19 @@
     "energy": null
   },
   {
+    "id": "1718278233",
+    "title": "Papa Meri Jaan",
+    "artist": "Sonu Nigam, Harshavardhan Rameshwar & Raj Shekhar",
+    "artist_id": 0,
+    "album": "ANIMAL (Original Motion Picture Soundtrack)",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/db/ad/5e/dbad5e8b-0bee-d962-92d4-021c90e375ac/8902894362092_cover.jpg/200x200bb.png",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/db/ad/5e/dbad5e8b-0bee-d962-92d4-021c90e375ac/8902894362092_cover.jpg/600x600bb.png",
+    "duration": 0,
+    "genre": "Bollywood",
+    "tempo": null,
+    "energy": null
+  },
+  {
     "id": "1721302571",
     "title": "Naukar Rakhlo Lakhdatar",
     "artist": "Vimal Dixit",
@@ -2713,6 +2739,19 @@
     "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b7/f4/7b/b7f47be7-ef85-8413-9bf2-4e68173650cc/198588164426.jpg/600x600bb.jpg",
     "duration": 195,
     "genre": "Electronic",
+    "tempo": null,
+    "energy": null
+  },
+  {
+    "id": "1748059885",
+    "title": "FA9LA",
+    "artist": "Flipperachi",
+    "artist_id": 0,
+    "album": "\u0641\u0635\u0644\u0629 - Single",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/da/55/1d/da551dbe-c8df-d7c2-e422-1e7b868ed1a1/198588182598.jpg/200x200bb.png",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/da/55/1d/da551dbe-c8df-d7c2-e422-1e7b868ed1a1/198588182598.jpg/600x600bb.png",
+    "duration": 0,
+    "genre": "Rap",
     "tempo": null,
     "energy": null
   },
@@ -3172,6 +3211,19 @@
     "energy": null
   },
   {
+    "id": "1802964227",
+    "title": "STRUCT (Slowed)",
+    "artist": "UdieNnx",
+    "artist_id": 0,
+    "album": "UDISTRUCT",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/94/bc/2e/94bc2ea4-8f30-576d-2921-10b066054fad/cover.jpg/200x200bb.png",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/94/bc/2e/94bc2ea4-8f30-576d-2921-10b066054fad/cover.jpg/600x600bb.png",
+    "duration": 0,
+    "genre": "Baile Funk",
+    "tempo": null,
+    "energy": null
+  },
+  {
     "id": "1803595917",
     "title": "RAKHLO",
     "artist": "Dabzee & Rishi Roy",
@@ -3272,6 +3324,19 @@
     "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/28/03/fe/2803feb5-cfa7-2c16-0ccb-2232d1613103/5021732792907.jpg/600x600bb.jpg",
     "duration": 168,
     "genre": "Pop",
+    "tempo": null,
+    "energy": null
+  },
+  {
+    "id": "1813163183",
+    "title": "Vinay Rajkumar Birthday Theme Music (From \"CityLights\")",
+    "artist": "Charanraj M.R",
+    "artist_id": 0,
+    "album": "Vinay Rajkumar Birthday Theme Music (From \"CityLights\") - Single",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/79/3f/36/793f36a4-6eb6-618b-20f4-bd6f35759eda/195009045647.jpg/200x200bb.png",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/79/3f/36/793f36a4-6eb6-618b-20f4-bd6f35759eda/195009045647.jpg/600x600bb.png",
+    "duration": 0,
+    "genre": "Regional Indian",
     "tempo": null,
     "energy": null
   },
@@ -3389,6 +3454,19 @@
     "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/33/cd/4b/33cd4be2-1f68-0a73-0b1d-58519f42bd89/cover.jpg/600x600bb.png",
     "duration": 0,
     "genre": "Indian",
+    "tempo": null,
+    "energy": null
+  },
+  {
+    "id": "1822804830",
+    "title": "Chubina",
+    "artist": "East Duo",
+    "artist_id": 0,
+    "album": "Chubina - Single",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/d9/28/d3/d928d3f2-4fda-2fcd-0cbf-9cffb209961e/26421404-8302-48e5-925a-7e5c6614499d.jpg/200x200bb.png",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/d9/28/d3/d928d3f2-4fda-2fcd-0cbf-9cffb209961e/26421404-8302-48e5-925a-7e5c6614499d.jpg/600x600bb.png",
+    "duration": 0,
+    "genre": "Folk",
     "tempo": null,
     "energy": null
   },
@@ -3519,6 +3597,19 @@
     "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/06/bd/e1/06bde161-335b-87fa-650a-f0d04bd9f55d/5021732889621.jpg/600x600bb.jpg",
     "duration": 193,
     "genre": "Pop",
+    "tempo": null,
+    "energy": null
+  },
+  {
+    "id": "1829591995",
+    "title": "MF Gabhru!",
+    "artist": "Karan Aujla & Ikky",
+    "artist_id": 914892130,
+    "album": "P-POP CULTURE",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/06/bd/e1/06bde161-335b-87fa-650a-f0d04bd9f55d/5021732889621.jpg/200x200bb.jpg",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/06/bd/e1/06bde161-335b-87fa-650a-f0d04bd9f55d/5021732889621.jpg/600x600bb.jpg",
+    "duration": 200,
+    "genre": "Rock",
     "tempo": null,
     "energy": null
   },
@@ -3757,6 +3848,19 @@
     "energy": null
   },
   {
+    "id": "1852517390",
+    "title": "Meri Zindagi Hai Tu",
+    "artist": "Asim Azhar & Sabri Sisters",
+    "artist_id": 0,
+    "album": "Meri Zindagi Hai Tu - Single",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/39/49/d4/3949d4b2-63b0-e6f4-4fc1-ea122ef390db/859722614695_cover.jpg/200x200bb.png",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/39/49/d4/3949d4b2-63b0-e6f4-4fc1-ea122ef390db/859722614695_cover.jpg/600x600bb.png",
+    "duration": 0,
+    "genre": "Worldwide",
+    "tempo": null,
+    "energy": null
+  },
+  {
     "id": "1853034368",
     "title": "bargad",
     "artist": "sufr, Arpit Bala & toorjo dey",
@@ -3818,6 +3922,19 @@
     "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/10/62/00/106200d4-df06-2538-92f4-29b076763610/25UM2IM00589.rgb.jpg/600x600bb.jpg",
     "duration": 257,
     "genre": "Pop",
+    "tempo": null,
+    "energy": null
+  },
+  {
+    "id": "1858427542",
+    "title": "Tulasi (feat. Sumant Shridhar)",
+    "artist": "Sumedh K",
+    "artist_id": 0,
+    "album": "Tulasi (feat. Sumant Shridhar) - Single",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/24/a1/cb/24a1cbd2-2e27-ff86-7b9b-61c9f57f5601/859724697580_cover.jpg/200x200bb.png",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/24/a1/cb/24a1cbd2-2e27-ff86-7b9b-61c9f57f5601/859724697580_cover.jpg/600x600bb.png",
+    "duration": 0,
+    "genre": "Kannada",
     "tempo": null,
     "energy": null
   },
@@ -4069,6 +4186,19 @@
     "energy": null
   },
   {
+    "id": "1869032083",
+    "title": "23 Theme (From \"AA23\")",
+    "artist": "Anirudh Ravichander, Hector Salamanca & Heisenberg",
+    "artist_id": 0,
+    "album": "23 Theme (From \"AA23\") - Single",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/c2/aa/98/c2aa9831-475e-7825-de1f-a116b7dcc25f/199806963265.jpg/200x200bb.png",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/c2/aa/98/c2aa9831-475e-7825-de1f-a116b7dcc25f/199806963265.jpg/600x600bb.png",
+    "duration": 0,
+    "genre": "Telugu",
+    "tempo": null,
+    "energy": null
+  },
+  {
     "id": "1869517750",
     "title": "Arz Kiya Hai",
     "artist": "Jaikant bhardwaj",
@@ -4156,6 +4286,19 @@
     "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/66/b3/a8/66b3a8d4-10ba-ea70-37ff-b1e73ab22431/075679586377.jpg/600x600bb.jpg",
     "duration": 182,
     "genre": "R&B/Soul",
+    "tempo": null,
+    "energy": null
+  },
+  {
+    "id": "1878964516",
+    "title": "Aaja Raja (From \"KH x RK Reunion\")",
+    "artist": "Anirudh Ravichander & Chintu",
+    "artist_id": 0,
+    "album": "Aaja Raja (From \"KH x RK Reunion\") - Single",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/5a/f5/b7/5af5b7d3-7925-beac-a9d7-9ff5f17c3fc5/820200340795.jpg/200x200bb.png",
+    "cover_xl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/5a/f5/b7/5af5b7d3-7925-beac-a9d7-9ff5f17c3fc5/820200340795.jpg/600x600bb.png",
+    "duration": 0,
+    "genre": "Tamil",
     "tempo": null,
     "energy": null
   },
