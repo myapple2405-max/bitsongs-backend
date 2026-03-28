@@ -8,7 +8,7 @@ class NetworkService: ObservableObject {
     // For simulator: use localhost / 127.0.0.1
     // For physical device: use your Mac's local IP (e.g., 192.168.1.x)
     static let shared = NetworkService()
-    @Published var baseURL: String = "http://Jay.local:499"
+    @Published var baseURL: String = "http://127.0.0.1:8000"
     
     private let session: URLSession
     private let decoder: JSONDecoder

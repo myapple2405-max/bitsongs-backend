@@ -8,48 +8,48 @@
 
 /* Begin PBXBuildFile section */
 		6058406EB8AA862A7871B1C0 /* Almendra-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E9A4DA2AD98FEF9383E9FEB /* Almendra-Regular.ttf */; };
-		'AA000001' = {isa = PBXBuildFile; fileRef = AA100001; };
-		'AA000002' = {isa = PBXBuildFile; fileRef = AA100002; };
-		'AA000003' = {isa = PBXBuildFile; fileRef = AA100003; };
-		'AA000004' = {isa = PBXBuildFile; fileRef = AA100004; };
-		'AA000005' = {isa = PBXBuildFile; fileRef = AA100005; };
-		'AA000006' = {isa = PBXBuildFile; fileRef = AA100006; };
-		'AA000007' = {isa = PBXBuildFile; fileRef = AA100007; };
-		'AA000008' = {isa = PBXBuildFile; fileRef = AA100008; };
-		'AA000009' = {isa = PBXBuildFile; fileRef = AA100009; };
-		'AA000010' = {isa = PBXBuildFile; fileRef = AA100010; };
-		'AA000011' = {isa = PBXBuildFile; fileRef = AA100011; };
-		'AA000012' = {isa = PBXBuildFile; fileRef = AA100012; };
-		'AA000013' = {isa = PBXBuildFile; fileRef = AA100013; };
-		'AA000014' = {isa = PBXBuildFile; fileRef = AA100014; };
-		'AA000015' = {isa = PBXBuildFile; fileRef = AA100015; };
+		AA000001 /* BitsongApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100001 /* BitsongApp.swift */; };
+		AA000002 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100002 /* Song.swift */; };
+		AA000003 /* MusicPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100003 /* MusicPlayerViewModel.swift */; };
+		AA000004 /* MusicPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100004 /* MusicPlayerView.swift */; };
+		AA000005 /* DynamicBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100005 /* DynamicBackgroundView.swift */; };
+		AA000006 /* AlbumArtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100006 /* AlbumArtView.swift */; };
+		AA000007 /* PlaybackControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100007 /* PlaybackControlsView.swift */; };
+		AA000008 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100008 /* SearchBarView.swift */; };
+		AA000009 /* UpNextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100009 /* UpNextView.swift */; };
+		AA000010 /* ColorExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100010 /* ColorExtractor.swift */; };
+		AA000011 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100011 /* HapticManager.swift */; };
+		AA000012 /* ToneGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100012 /* ToneGenerator.swift */; };
+		AA000013 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA100013 /* Assets.xcassets */; };
+		AA000014 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA100014 /* Preview Assets.xcassets */; };
+		AA000015 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100015 /* NetworkService.swift */; };
 		AE564FFEBE96C4565E77AAF4 /* Jersey10-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 664C4872899C668E7C69893A /* Jersey10-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		664C4872899C668E7C69893A /* Jersey10-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file.ttf; name = "Jersey10-Regular.ttf"; path = "Bitsongs/Fonts/Jersey10-Regular.ttf"; sourceTree = SOURCE_ROOT; };
 		6E9A4DA2AD98FEF9383E9FEB /* Almendra-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file.ttf; name = "Almendra-Regular.ttf"; path = "Bitsongs/Fonts/Almendra-Regular.ttf"; sourceTree = SOURCE_ROOT; };
-		'AA100001' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitsongApp.swift; sourceTree = "<group>"; };
-		'AA100002' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
-		'AA100003' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerViewModel.swift; sourceTree = "<group>"; };
-		'AA100004' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerView.swift; sourceTree = "<group>"; };
-		'AA100005' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicBackgroundView.swift; sourceTree = "<group>"; };
-		'AA100006' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumArtView.swift; sourceTree = "<group>"; };
-		'AA100007' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControlsView.swift; sourceTree = "<group>"; };
-		'AA100008' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
-		'AA100009' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextView.swift; sourceTree = "<group>"; };
-		'AA100010' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtractor.swift; sourceTree = "<group>"; };
-		'AA100011' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
-		'AA100012' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToneGenerator.swift; sourceTree = "<group>"; };
-		'AA100013' = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		'AA100014' = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		'AA100015' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
-		'AA200001' = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bitsongs.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		'AA300001' = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA100001 /* BitsongApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitsongApp.swift; sourceTree = "<group>"; };
+		AA100002 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		AA100003 /* MusicPlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerViewModel.swift; sourceTree = "<group>"; };
+		AA100004 /* MusicPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerView.swift; sourceTree = "<group>"; };
+		AA100005 /* DynamicBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicBackgroundView.swift; sourceTree = "<group>"; };
+		AA100006 /* AlbumArtView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumArtView.swift; sourceTree = "<group>"; };
+		AA100007 /* PlaybackControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControlsView.swift; sourceTree = "<group>"; };
+		AA100008 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
+		AA100009 /* UpNextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextView.swift; sourceTree = "<group>"; };
+		AA100010 /* ColorExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtractor.swift; sourceTree = "<group>"; };
+		AA100011 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		AA100012 /* ToneGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToneGenerator.swift; sourceTree = "<group>"; };
+		AA100013 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA100014 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		AA100015 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		AA200001 /* Bitsongs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bitsongs.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA300001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		'AA400001' = {
+		AA400001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -59,99 +59,99 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		'AA500001' = {
+		AA500001 = {
 			isa = PBXGroup;
 			children = (
-				AA500002,
-				AA500009,
+				AA500002 /* Bitsongs */,
+				AA500009 /* Products */,
 				664C4872899C668E7C69893A /* Jersey10-Regular.ttf */,
 				6E9A4DA2AD98FEF9383E9FEB /* Almendra-Regular.ttf */,
 			);
 			sourceTree = "<group>";
 		};
-		'AA500002' = {
+		AA500002 /* Bitsongs */ = {
 			isa = PBXGroup;
 			children = (
-				AA100001,
-				AA300001,
-				AA500003,
-				AA500004,
-				AA500005,
-				AA500010,
-				AA500007,
-				AA100013,
-				AA500008,
+				AA100001 /* BitsongApp.swift */,
+				AA300001 /* Info.plist */,
+				AA500003 /* Models */,
+				AA500004 /* ViewModels */,
+				AA500005 /* Views */,
+				AA500010 /* Services */,
+				AA500007 /* Utilities */,
+				AA100013 /* Assets.xcassets */,
+				AA500008 /* Preview Content */,
 			);
 			path = Bitsongs;
 			sourceTree = "<group>";
 		};
-		'AA500003' = {
+		AA500003 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				AA100002,
+				AA100002 /* Song.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
 		};
-		'AA500004' = {
+		AA500004 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				AA100003,
+				AA100003 /* MusicPlayerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		'AA500005' = {
+		AA500005 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AA100004,
-				AA500006,
+				AA100004 /* MusicPlayerView.swift */,
+				AA500006 /* Components */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		'AA500006' = {
+		AA500006 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				AA100005,
-				AA100006,
-				AA100007,
-				AA100008,
-				AA100009,
+				AA100005 /* DynamicBackgroundView.swift */,
+				AA100006 /* AlbumArtView.swift */,
+				AA100007 /* PlaybackControlsView.swift */,
+				AA100008 /* SearchBarView.swift */,
+				AA100009 /* UpNextView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
 		};
-		'AA500007' = {
+		AA500007 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				AA100010,
-				AA100011,
-				AA100012,
+				AA100010 /* ColorExtractor.swift */,
+				AA100011 /* HapticManager.swift */,
+				AA100012 /* ToneGenerator.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
 		};
-		'AA500008' = {
+		AA500008 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				AA100014,
+				AA100014 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		'AA500009' = {
+		AA500009 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AA200001,
+				AA200001 /* Bitsongs.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		'AA500010' = {
+		AA500010 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				AA100015,
+				AA100015 /* NetworkService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -159,13 +159,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		'AA600001' = {
+		AA600001 /* Bitsongs */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AA800002;
+			buildConfigurationList = AA800002 /* Build configuration list for PBXNativeTarget "Bitsongs" */;
 			buildPhases = (
-				AA700001,
-				AA400001,
-				AA700002,
+				AA700001 /* Sources */,
+				AA400001 /* Frameworks */,
+				AA700002 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -173,25 +173,25 @@
 			);
 			name = Bitsongs;
 			productName = Bitsongs;
-			productReference = AA200001;
+			productReference = AA200001 /* Bitsongs.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		'AA900001' = {
+		AA900001 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					AA600001 = {
 						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
-			buildConfigurationList = AA800001;
+			buildConfigurationList = AA800001 /* Build configuration list for PBXProject "Bitsongs" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -200,22 +200,22 @@
 				Base,
 			);
 			mainGroup = AA500001;
-			productRefGroup = AA500009;
+			productRefGroup = AA500009 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AA600001,
+				AA600001 /* Bitsongs */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		'AA700002' = {
+		AA700002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA000014,
-				AA000013,
+				AA000014 /* Preview Assets.xcassets in Resources */,
+				AA000013 /* Assets.xcassets in Resources */,
 				AE564FFEBE96C4565E77AAF4 /* Jersey10-Regular.ttf in Resources */,
 				6058406EB8AA862A7871B1C0 /* Almendra-Regular.ttf in Resources */,
 			);
@@ -224,30 +224,30 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		'AA700001' = {
+		AA700001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA000001,
-				AA000002,
-				AA000003,
-				AA000004,
-				AA000005,
-				AA000006,
-				AA000007,
-				AA000008,
-				AA000009,
-				AA000010,
-				AA000011,
-				AA000012,
-				AA000015,
+				AA000001 /* BitsongApp.swift in Sources */,
+				AA000002 /* Song.swift in Sources */,
+				AA000003 /* MusicPlayerViewModel.swift in Sources */,
+				AA000004 /* MusicPlayerView.swift in Sources */,
+				AA000005 /* DynamicBackgroundView.swift in Sources */,
+				AA000006 /* AlbumArtView.swift in Sources */,
+				AA000007 /* PlaybackControlsView.swift in Sources */,
+				AA000008 /* SearchBarView.swift in Sources */,
+				AA000009 /* UpNextView.swift in Sources */,
+				AA000010 /* ColorExtractor.swift in Sources */,
+				AA000011 /* HapticManager.swift in Sources */,
+				AA000012 /* ToneGenerator.swift in Sources */,
+				AA000015 /* NetworkService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		'AAB00001' = {
+		AAB00001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -282,6 +282,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8UK56CM92L;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -305,12 +306,13 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		'AAB00002' = {
+		AAB00002 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -345,6 +347,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8UK56CM92L;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -361,12 +364,13 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		'AAB00003' = {
+		AAB00003 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -374,7 +378,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Bitsongs/Preview Content\"";
-				DEVELOPMENT_TEAM = 2X4PPNFDYW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Bitsongs/Info.plist;
@@ -400,7 +403,7 @@
 			};
 			name = Debug;
 		};
-		'AAB00004' = {
+		AAB00004 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -408,7 +411,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Bitsongs/Preview Content\"";
-				DEVELOPMENT_TEAM = 2X4PPNFDYW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Bitsongs/Info.plist;
@@ -437,25 +439,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		'AA800001' = {
+		AA800001 /* Build configuration list for PBXProject "Bitsongs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AAB00001,
-				AAB00002,
+				AAB00001 /* Debug */,
+				AAB00002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		'AA800002' = {
+		AA800002 /* Build configuration list for PBXNativeTarget "Bitsongs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AAB00003,
-				AAB00004,
+				AAB00003 /* Debug */,
+				AAB00004 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = AA900001;
+	rootObject = AA900001 /* Project object */;
 }
