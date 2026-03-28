@@ -327,18 +327,23 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
     "cookiefile": str(BASE_DIR / "cookies.txt"),
 }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        try:
-            info = ydl.extract_info(f"ytsearch1:{query}", download=False)
-            video = info["entries"][0] if "entries" in info else info
-            http_headers = video.get("http_headers", {})
-            base_url = str(request.base_url).rstrip("/")
-           return JSONResponse({
-    "source": "youtube",
-    "url": video["url"],
-    "headers": http_headers
-})
-        except Exception as exc:
-            return JSONResponse({"error": f"Song not found: {exc}"}, status_code=404)
+            try:
+                    info = ydl.extract_info(f"ytsearch1:{query}", download=False)
+                    video = info["entries"][0] if "entries" in info else info
+                    http_headers = video.get("http_headers", {})
+
+                    return JSONResponse({
+                        "source": "youtube",
+                        "url": video["url"],
+                        "headers": http_headers
+                    })
+                
+    
+
+    except Exception as exc:
+        return JSONResponse({
+            "error": f"Song not found: {exc}"
+        }, status_code=404)
 
 
 @app.get("/")
