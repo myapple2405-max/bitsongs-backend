@@ -266,12 +266,13 @@ def download_task(song_id, artist, title):
         return
     query = f"{artist} - {title} audio"
     ydl_opts = {
-        "format": "bestaudio[ext=m4a]/best",
-        "outtmpl": str(filepath),
-        "quiet": True,
-        "noplaylist": True,
-        "extractor_args": {"youtube": {"client": ["android", "ios"]}},
-    }
+    "format": "bestaudio[ext=m4a]/best",
+    "outtmpl": str(filepath),
+    "quiet": True,
+    "noplaylist": True,
+    "extractor_args": {"youtube": {"client": ["android", "ios"]}},
+    "cookiefile": str(BASE_DIR / "cookies.txt"),
+}
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([f"ytsearch1:{query}"])
@@ -319,11 +320,12 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
 
     query = f"{artist} - {title} audio"
     ydl_opts = {
-        "format": "bestaudio[ext=m4a]/bestaudio/best",
-        "quiet": True,
-        "noplaylist": True,
-        "extractor_args": {"youtube": {"client": ["android", "ios"]}},
-    }
+    "format": "bestaudio[ext=m4a]/bestaudio/best",
+    "quiet": True,
+    "noplaylist": True,
+    "extractor_args": {"youtube": {"client": ["android", "ios"]}},
+    "cookiefile": str(BASE_DIR / "cookies.txt"),
+}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
             info = ydl.extract_info(f"ytsearch1:{query}", download=False)
