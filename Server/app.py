@@ -332,8 +332,11 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
             video = info["entries"][0] if "entries" in info else info
             http_headers = video.get("http_headers", {})
             base_url = str(request.base_url).rstrip("/")
-            proxy_url = f"{base_url}/api/mobile/stream_proxy?url={quote(video['url'])}&headers={quote(json.dumps(http_headers))}"
-            return JSONResponse({"source": "youtube", "url": proxy_url, "direct_url": video["url"], "headers": http_headers})
+           return JSONResponse({
+    "source": "youtube",
+    "url": video["url"],
+    "headers": http_headers
+})
         except Exception as exc:
             return JSONResponse({"error": f"Song not found: {exc}"}, status_code=404)
 
