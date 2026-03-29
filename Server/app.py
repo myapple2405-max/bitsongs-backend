@@ -318,34 +318,56 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
         base_url = str(request.base_url).rstrip("/")
         return JSONResponse({"source": "local", "url": f"{base_url}/api/mobile/stream_cache/{filename}"})
 
-    query = f"{artist} - {title} audio"
-    ydl_opts = {
-    "format": "bestaudio/best",
-    "quiet": True,
-    "noplaylist": True,
-    "extractor_args": {
-        "youtube": {
-            "player_client": ["web"]   # ← change this from ["android", "ios"]
-        }
-    },
-    "cookiefile": os.path.join(os.getcwd(), "cookies.txt"),
-}
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        try:
-            info = ydl.extract_info(f"ytsearch1:{query}", download=False)
-            video = info["entries"][0] if "entries" in info else info
-            http_headers = video.get("http_headers", {})
+    query = f"{artist} - {title}"
+    try:
+        # Search Invidious for the video
+        invidious_instances = [
+            "https://inv.nadeko.net",
+            "https://invidious.nerdvpn.de",
+            "https://invidious.privacyredirect.com",
+        ]
+        video_id = None
+        for instance in invidious_instances:
+            try:
+                resp = requests.get(
+                    f"{instance}/api/v1/search",
+                    params={"q": query, "type": "video", "fields": "videoId,title", "page": "1"},
+                    timeout=8,
+                )
+                results = resp.json()
+                if isinstance(results, list) and results:
+                    video_id = results[0]["videoId"]
+                    break
+            except Exception:
+                continue
 
-            return JSONResponse({
-                "source": "youtube",
-                "url": video["url"],
-                "headers": http_headers
-            })
+        if not video_id:
+            return JSONResponse({"error": "Song not found"}, status_code=404)
 
-        except Exception as exc:
-            return JSONResponse({
-                "error": f"Song not found: {exc}"
-            }, status_code=404)
+        # Get stream URL from Invidious
+        for instance in invidious_instances:
+            try:
+                resp = requests.get(
+                    f"{instance}/api/v1/videos/{video_id}",
+                    params={"fields": "adaptiveFormats,formatStreams"},
+                    timeout=8,
+                )
+                data = resp.json()
+                # Try adaptive formats first (audio only)
+                for fmt in data.get("adaptiveFormats", []):
+                    if "audio" in fmt.get("type", "") and fmt.get("url"):
+                        return JSONResponse({"source": "youtube", "url": fmt["url"], "headers": {}})
+                # Fall back to combined formats
+                for fmt in data.get("formatStreams", []):
+                    if fmt.get("url"):
+                        return JSONResponse({"source": "youtube", "url": fmt["url"], "headers": {}})
+            except Exception:
+                continue
+
+        return JSONResponse({"error": "Stream not found"}, status_code=404)
+
+    except Exception as exc:
+        return JSONResponse({"error": f"Song not found: {exc}"}, status_code=404)
 
 
 @app.get("/")
