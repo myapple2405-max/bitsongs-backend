@@ -325,10 +325,10 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
     "noplaylist": True,
     "extractor_args": {
         "youtube": {
-            "player_client": ["android", "ios"]
+            "player_client": ["web"]   # ← change this from ["android", "ios"]
         }
     },
-    "cookiefile": os.path.join(os.getcwd(), "cookies.txt"),  # ← add this
+    "cookiefile": os.path.join(os.getcwd(), "cookies.txt"),
 }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
