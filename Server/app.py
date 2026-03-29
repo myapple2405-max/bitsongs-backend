@@ -271,7 +271,7 @@ def download_task(song_id, artist, title):
     "quiet": True,
     "noplaylist": True,
     "extractor_args": {"youtube": {"client": ["android", "ios"]}},
-    "cookiefile": str(BASE_DIR / "cookies.txt"),
+    "cookiefile": os.path.join(os.getcwd(), "cookies.txt"),
 }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -320,11 +320,15 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
 
     query = f"{artist} - {title} audio"
     ydl_opts = {
-    "format": "bestaudio[ext=m4a]/bestaudio/best",
+    "format": "bestaudio/best",
     "quiet": True,
     "noplaylist": True,
-    "extractor_args": {"youtube": {"client": ["android", "ios"]}},
-    "cookiefile": str(BASE_DIR / "cookies.txt"),
+    "extractor_args": {
+        "youtube": {
+            "player_client": ["android", "ios"]
+        }
+    },
+    "cookiefile": os.path.join(os.getcwd(), "cookies.txt"),  # ← add this
 }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
