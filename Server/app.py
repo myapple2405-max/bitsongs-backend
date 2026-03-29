@@ -318,10 +318,42 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
         base_url = str(request.base_url).rstrip("/")
         return JSONResponse({"source": "local", "url": f"{base_url}/api/mobile/stream_cache/{filename}"})
 
-    song = get_song_by_id(song_id)
-    preview_url = song.get("preview_url", "") if song else ""
+    query = f"{artist} {title}"
+    try:
+        # Step 1: Search Jiosaavn
+        search_resp = requests.get(
+            "https://saavn.dev/api/search/songs",
+            params={"query": query, "limit": 1},
+            timeout=8,
+        )
+        search_data = search_resp.json()
+        results = search_data.get("data", {}).get("results", [])
+        if not results:
+            raise Exception("No results from Jiosaavn")
 
-    if not preview_url:
+        song_data = results[0]
+        # Try highest quality first, fall back to lower
+        download_urls = song_data.get("downloadUrl", [])
+        stream_url = None
+        for quality in ["320kbps", "160kbps", "96kbps"]:
+            for entry in download_urls:
+                if entry.get("quality") == quality and entry.get("url"):
+                    stream_url = entry["url"]
+                    break
+            if stream_url:
+                break
+
+        # Fallback to any available url
+        if not stream_url and download_urls:
+            stream_url = download_urls[-1].get("url")
+
+        if stream_url:
+            return JSONResponse({"source": "youtube", "url": stream_url, "headers": {}})
+
+        raise Exception("No stream URL in Jiosaavn response")
+
+    except Exception as exc:
+        # Fallback to iTunes 30s preview
         try:
             resp = requests.get(
                 "https://itunes.apple.com/lookup",
@@ -331,13 +363,11 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
             results = resp.json().get("results", [])
             if results:
                 preview_url = results[0].get("previewUrl", "")
+                if preview_url:
+                    return JSONResponse({"source": "youtube", "url": preview_url, "headers": {}})
         except Exception:
             pass
-
-    if preview_url:
-        return JSONResponse({"source": "youtube", "url": preview_url, "headers": {}})
-
-    return JSONResponse({"error": "No preview available"}, status_code=404)
+        return JSONResponse({"error": f"Song not found: {exc}"}, status_code=404)
 
 
 @app.get("/")
