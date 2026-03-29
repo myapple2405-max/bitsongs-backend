@@ -320,29 +320,67 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
 
     query = f"{artist} - {title}"
     try:
-        # Search Invidious for the video
-        invidious_instances = [
-            "https://inv.nadeko.net",
-            "https://invidious.nerdvpn.de",
-            "https://invidious.privacyredirect.com",
+        # Step 1: Search for video ID using Piped
+        piped_instances = [
+            "https://pipedapi.kavin.rocks",
+            "https://piped-api.garudalinux.org",
+            "https://api.piped.yt",
         ]
+        
         video_id = None
-        for instance in invidious_instances:
+        for instance in piped_instances:
             try:
                 resp = requests.get(
-                    f"{instance}/api/v1/search",
-                    params={"q": query, "type": "video", "fields": "videoId,title", "page": "1"},
+                    f"{instance}/search",
+                    params={"q": query, "filter": "videos"},
                     timeout=8,
                 )
-                results = resp.json()
-                if isinstance(results, list) and results:
-                    video_id = results[0]["videoId"]
-                    break
+                data = resp.json()
+                items = data.get("items", [])
+                if items:
+                    url = items[0].get("url", "")
+                    if "watch?v=" in url:
+                        video_id = url.split("watch?v=")[-1].split("&")[0]
+                        break
             except Exception:
                 continue
 
         if not video_id:
             return JSONResponse({"error": "Song not found"}, status_code=404)
+
+        # Step 2: Get stream URL from Piped
+        for instance in piped_instances:
+            try:
+                resp = requests.get(
+                    f"{instance}/streams/{video_id}",
+                    timeout=8,
+                )
+                data = resp.json()
+                
+                # Try audio streams first
+                for stream in data.get("audioStreams", []):
+                    if stream.get("url"):
+                        return JSONResponse({
+                            "source": "youtube",
+                            "url": stream["url"],
+                            "headers": {}
+                        })
+                
+                # Fall back to video streams
+                for stream in data.get("videoStreams", []):
+                    if stream.get("url"):
+                        return JSONResponse({
+                            "source": "youtube",
+                            "url": stream["url"],
+                            "headers": {}
+                        })
+            except Exception:
+                continue
+
+        return JSONResponse({"error": "Stream not found"}, status_code=404)
+
+    except Exception as exc:
+        return JSONResponse({"error": f"Song not found: {exc}"}, status_code=404)
 
         # Get stream URL from Invidious
         for instance in invidious_instances:
