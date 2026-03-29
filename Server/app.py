@@ -319,55 +319,57 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
         return JSONResponse({"source": "local", "url": f"{base_url}/api/mobile/stream_cache/{filename}"})
 
     query = f"{artist} {title}"
-    try:
-        # Step 1: Search Jiosaavn
-        search_resp = requests.get(
-            "https://saavn.dev/api/search/songs",
-            params={"query": query, "limit": 1},
-            timeout=8,
-        )
-        search_data = search_resp.json()
-        results = search_data.get("data", {}).get("results", [])
-        if not results:
-            raise Exception("No results from Jiosaavn")
+    jiosaavn_hosts = [
+        "https://jiosaavn-api-privatecvc2.vercel.app",
+        "https://jiosaavn-api.vercel.app",
+        "https://saavn-api.vercel.app",
+    ]
 
-        song_data = results[0]
-        # Try highest quality first, fall back to lower
-        download_urls = song_data.get("downloadUrl", [])
-        stream_url = None
-        for quality in ["320kbps", "160kbps", "96kbps"]:
-            for entry in download_urls:
-                if entry.get("quality") == quality and entry.get("url"):
-                    stream_url = entry["url"]
-                    break
-            if stream_url:
-                break
-
-        # Fallback to any available url
-        if not stream_url and download_urls:
-            stream_url = download_urls[-1].get("url")
-
-        if stream_url:
-            return JSONResponse({"source": "youtube", "url": stream_url, "headers": {}})
-
-        raise Exception("No stream URL in Jiosaavn response")
-
-    except Exception as exc:
-        # Fallback to iTunes 30s preview
+    for host in jiosaavn_hosts:
         try:
-            resp = requests.get(
-                "https://itunes.apple.com/lookup",
-                params={"id": song_id, "country": "IN"},
+            search_resp = requests.get(
+                f"{host}/api/search/songs",
+                params={"query": query, "limit": 1},
                 timeout=8,
             )
-            results = resp.json().get("results", [])
-            if results:
-                preview_url = results[0].get("previewUrl", "")
-                if preview_url:
-                    return JSONResponse({"source": "youtube", "url": preview_url, "headers": {}})
+            if search_resp.status_code != 200:
+                continue
+            search_data = search_resp.json()
+            results = search_data.get("data", {}).get("results", [])
+            if not results:
+                continue
+            download_urls = results[0].get("downloadUrl", [])
+            stream_url = None
+            for quality in ["320kbps", "160kbps", "96kbps"]:
+                for entry in download_urls:
+                    if entry.get("quality") == quality and entry.get("url"):
+                        stream_url = entry["url"]
+                        break
+                if stream_url:
+                    break
+            if not stream_url and download_urls:
+                stream_url = download_urls[-1].get("url")
+            if stream_url:
+                return JSONResponse({"source": "youtube", "url": stream_url, "headers": {}})
         except Exception:
-            pass
-        return JSONResponse({"error": f"Song not found: {exc}"}, status_code=404)
+            continue
+
+    # Fallback to iTunes 30s preview
+    try:
+        resp = requests.get(
+            "https://itunes.apple.com/lookup",
+            params={"id": song_id, "country": "IN"},
+            timeout=8,
+        )
+        results = resp.json().get("results", [])
+        if results:
+            preview_url = results[0].get("previewUrl", "")
+            if preview_url:
+                return JSONResponse({"source": "youtube", "url": preview_url, "headers": {}})
+    except Exception:
+        pass
+
+    return JSONResponse({"error": "Song not found"}, status_code=404)
 
 
 @app.get("/")
