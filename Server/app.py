@@ -318,83 +318,26 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
         base_url = str(request.base_url).rstrip("/")
         return JSONResponse({"source": "local", "url": f"{base_url}/api/mobile/stream_cache/{filename}"})
 
-    query = f"{artist} - {title}"
-    piped_instances = [
-        "https://pipedapi.kavin.rocks",
-        "https://piped-api.garudalinux.org",
-        "https://api.piped.yt",
-    ]
+    song = get_song_by_id(song_id)
+    preview_url = song.get("preview_url", "") if song else ""
 
-    for instance in piped_instances:
+    if not preview_url:
         try:
             resp = requests.get(
-                f"{instance}/search",
-                params={"q": query, "filter": "videos"},
+                "https://itunes.apple.com/lookup",
+                params={"id": song_id, "country": "IN"},
                 timeout=8,
             )
-            print(f"[DEBUG] {instance} status={resp.status_code} body={resp.text[:300]}")
-        except Exception as e:
-            print(f"[DEBUG] {instance} FAILED: {e}")
+            results = resp.json().get("results", [])
+            if results:
+                preview_url = results[0].get("previewUrl", "")
+        except Exception:
+            pass
 
-    return JSONResponse({"error": "debug mode"}, status_code=404)
-        # Step 2: Get stream URL from Piped
-        for instance in piped_instances:
-            try:
-                resp = requests.get(
-                    f"{instance}/streams/{video_id}",
-                    timeout=8,
-                )
-                data = resp.json()
-                
-                # Try audio streams first
-                for stream in data.get("audioStreams", []):
-                    if stream.get("url"):
-                        return JSONResponse({
-                            "source": "youtube",
-                            "url": stream["url"],
-                            "headers": {}
-                        })
-                
-                # Fall back to video streams
-                for stream in data.get("videoStreams", []):
-                    if stream.get("url"):
-                        return JSONResponse({
-                            "source": "youtube",
-                            "url": stream["url"],
-                            "headers": {}
-                        })
-            except Exception:
-                continue
+    if preview_url:
+        return JSONResponse({"source": "youtube", "url": preview_url, "headers": {}})
 
-        return JSONResponse({"error": "Stream not found"}, status_code=404)
-
-    except Exception as exc:
-        return JSONResponse({"error": f"Song not found: {exc}"}, status_code=404)
-
-        # Get stream URL from Invidious
-        for instance in invidious_instances:
-            try:
-                resp = requests.get(
-                    f"{instance}/api/v1/videos/{video_id}",
-                    params={"fields": "adaptiveFormats,formatStreams"},
-                    timeout=8,
-                )
-                data = resp.json()
-                # Try adaptive formats first (audio only)
-                for fmt in data.get("adaptiveFormats", []):
-                    if "audio" in fmt.get("type", "") and fmt.get("url"):
-                        return JSONResponse({"source": "youtube", "url": fmt["url"], "headers": {}})
-                # Fall back to combined formats
-                for fmt in data.get("formatStreams", []):
-                    if fmt.get("url"):
-                        return JSONResponse({"source": "youtube", "url": fmt["url"], "headers": {}})
-            except Exception:
-                continue
-
-        return JSONResponse({"error": "Stream not found"}, status_code=404)
-
-    except Exception as exc:
-        return JSONResponse({"error": f"Song not found: {exc}"}, status_code=404)
+    return JSONResponse({"error": "No preview available"}, status_code=404)
 
 
 @app.get("/")
