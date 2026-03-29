@@ -319,35 +319,24 @@ def render_play_response(request: Request, song_id: str, artist: str, title: str
         return JSONResponse({"source": "local", "url": f"{base_url}/api/mobile/stream_cache/{filename}"})
 
     query = f"{artist} - {title}"
-    try:
-        # Step 1: Search for video ID using Piped
-        piped_instances = [
-            "https://pipedapi.kavin.rocks",
-            "https://piped-api.garudalinux.org",
-            "https://api.piped.yt",
-        ]
-        
-        video_id = None
-        for instance in piped_instances:
-            try:
-                resp = requests.get(
-                    f"{instance}/search",
-                    params={"q": query, "filter": "videos"},
-                    timeout=8,
-                )
-                data = resp.json()
-                items = data.get("items", [])
-                if items:
-                    url = items[0].get("url", "")
-                    if "watch?v=" in url:
-                        video_id = url.split("watch?v=")[-1].split("&")[0]
-                        break
-            except Exception:
-                continue
+    piped_instances = [
+        "https://pipedapi.kavin.rocks",
+        "https://piped-api.garudalinux.org",
+        "https://api.piped.yt",
+    ]
 
-        if not video_id:
-            return JSONResponse({"error": "Song not found"}, status_code=404)
+    for instance in piped_instances:
+        try:
+            resp = requests.get(
+                f"{instance}/search",
+                params={"q": query, "filter": "videos"},
+                timeout=8,
+            )
+            print(f"[DEBUG] {instance} status={resp.status_code} body={resp.text[:300]}")
+        except Exception as e:
+            print(f"[DEBUG] {instance} FAILED: {e}")
 
+    return JSONResponse({"error": "debug mode"}, status_code=404)
         # Step 2: Get stream URL from Piped
         for instance in piped_instances:
             try:
